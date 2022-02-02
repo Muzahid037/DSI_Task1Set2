@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -21,14 +22,14 @@ public class Main {
         int studentId;
         studentId = scannerObj.nextInt();
 
-        System.out.println("Enter className-8/9/10");
-        int className; ///8,9,10
-        className = scannerObj.nextInt();
-
         scannerObj.nextLine();
 
         System.out.println("Enter Student Name");
         String studentName = scannerObj.nextLine();
+
+        System.out.println("Enter className-8/9/10");
+        int className; ///8,9,10
+        className = scannerObj.nextInt();
 
         HashMap<String, Boolean> subjectToBeTought = new HashMap<String, Boolean>(); ///math,eng,ban
         String[] subjects = {"Math", "Eng", "Ban"};
@@ -43,20 +44,38 @@ public class Main {
         }
         Student std = new Student(studentId, className, studentName, subjectToBeTought,
                 0, 0, 0);
-        StudentsController stdController=new StudentsController();
+        StudentsController stdController = new StudentsController();
         stdController.addStudent(std);
     }
 
-    private void showStudentList(){
+    private void showStudentList() {
 //        System.out.println("Ashci");
         Scanner scannerObj = new Scanner(System.in);
 
         System.out.println("Students");
-        StudentsController stdController=new StudentsController();
-       ArrayList<Student>studentsList= stdController.getStudents();
+        StudentsController stdController = new StudentsController();
+        ArrayList<Student> studentsList = stdController.getStudents();
 
-        for(Student s: studentsList) {
-            System.out.println(s.studentName);
+
+        Formatter formatter = new Formatter();
+
+        int idMaxLength = 7;
+        String idFormat = "%-" + idMaxLength + "." + idMaxLength + "s";
+
+        int nameMaxLength = 25;
+        String nameFormat = "%-" + nameMaxLength + "." + nameMaxLength + "s";
+
+        int earningMaxLength = 15;
+        String earningFormat = "%-" + earningMaxLength + "." + earningMaxLength + "s";
+
+        int avgMarksMaxLength = 15;
+        String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
+
+        System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, "Id", "Name", "Earning", "Avg-Marks"));
+        for (Student s : studentsList) {
+            formatter = new Formatter();
+            System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, s.studentId,
+                    s.studentName, s.totalEarning, s.avgMarks));
         }
 
     }
