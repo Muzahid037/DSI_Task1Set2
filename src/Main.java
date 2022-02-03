@@ -128,7 +128,7 @@ public class Main {
             Integer idMaxLength = 7;
             String idFormat = "%-" + idMaxLength + "." + idMaxLength + "s";
 
-            Integer nameMaxLength = 25;
+            Integer nameMaxLength = 22;
             String nameFormat = "%-" + nameMaxLength + "." + nameMaxLength + "s";
 
             Integer earningMaxLength = 15;
@@ -137,12 +137,79 @@ public class Main {
             Integer avgMarksMaxLength = 15;
             String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
 
-            System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, "Id", "Name", "Earning", "Avg-Marks"));
+            System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
+                    "Id", "Name", "Earning", "Avg-Marks"));
             for (Student s : studentsByClass) {
                 formatter = new Formatter();
-                System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, s.studentId,
-                        s.studentName, s.totalEarning, s.avgMarks));
+                System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
+                        s.studentId, s.studentName, s.totalEarning, s.avgMarks));
             }
+
+            System.out.println("Wanna see details any of the above student? Press 1-YES, 2-NO");
+            Integer isWanted = Integer.parseInt(scannerObj.nextLine());
+            if (isWanted == 1) {
+                System.out.println("Enter Student Id");
+                Integer specificStudentId = Integer.parseInt(scannerObj.nextLine());
+                Integer specificClassName = new Integer(8);
+                String specificStudentName = new String("");
+                HashMap<String, Boolean> specificSubjectTought = new HashMap<>();
+                Double specificAvgMarks = new Double(0.0);
+                Integer specificTotalDayTought = new Integer(0);
+                ;
+                Double specificTotalEarning = new Double(0.0);
+                Boolean isExistStd = false;
+                for (Student std : studentsByClass) {
+                    if (std.studentId == specificStudentId) {
+                        isExistStd = true;
+                        specificClassName = std.className;
+                        specificStudentName = std.studentName;
+                        specificSubjectTought = std.subjectToBeTought;
+                        specificAvgMarks = std.avgMarks;
+                        specificTotalDayTought = std.totalDayTought;
+                        specificTotalEarning = std.totalEarning;
+
+//                        System.out.println(std.studentId + " " + std.className + " " +
+//                                std.avgMarks + " " + std.totalDayTought + " " + std.totalEarning);
+                    }
+                }
+                if (isExistStd == true) {
+
+                    formatter = new Formatter();
+
+                    Integer classNameMaxLength = 6;
+                    String classNameFormat = "%-" + classNameMaxLength + "." + classNameMaxLength + "s";
+
+                    Integer subjectMaxLength = 15;
+                    String subjectFormat = "%-" + subjectMaxLength + "." + subjectMaxLength + "s";
+
+                    Integer dayTaughtMaxLength = 20;
+                    String dayTaughtFormat = "%-" + dayTaughtMaxLength + "." + dayTaughtMaxLength + "s";
+
+
+                    System.out.println(formatter.format(idFormat + classNameFormat + nameFormat + subjectFormat +
+                                    avgMarksFormat + dayTaughtFormat + earningFormat, "Id", "Class",
+                            "Name", "Subject", "Avg-Marks", "Day-Taught", "Earning"));
+
+                    formatter = new Formatter();
+                    String taughtSubjects = new String("");
+                    for (Map.Entry mapElement : specificSubjectTought.entrySet()) {
+                        String subject = (String) mapElement.getKey();
+                        boolean isTaught = (Boolean) mapElement.getValue();
+                        if (isTaught == true) {
+                            taughtSubjects += subject + " ";
+                        }
+                    }
+
+                    System.out.println(formatter.format(idFormat + classNameFormat + nameFormat + subjectFormat +
+                                    avgMarksFormat + dayTaughtFormat + earningFormat, specificStudentId,
+                            specificClassName, specificStudentName, taughtSubjects, specificAvgMarks,
+                            specificTotalDayTought, specificTotalEarning));
+
+                } else {
+                    System.out.println("There is no student with Id-" + specificStudentId);
+                }
+            }
+
         } else {
             System.out.println("There is no student in this class");
         }
