@@ -11,8 +11,8 @@ public class StudentsController {
         }
     }
 
-    public void addStudent(Student student) {
-        studentsDetails.getStudentsList().add(student);
+    public void addStudent(Student student,int classIndex) {
+        studentsDetails.getStudentsList(classIndex).add(student);
     }
 
     public void editStudent(Student student) {
@@ -48,9 +48,12 @@ public class StudentsController {
 //        return studentsDetails.getStudentsList();
 //    }
 
-        public ArrayList<Student> getStudents() {
-        return studentsDetails.getStudentsList();
+        public ArrayList<Student> getStudents(int classIndex) {
+        return studentsDetails.getStudentsList(classIndex);
     }
+//    public ArrayList<Student> getStudentsByClass(int classIndex) {
+//        return studentsDetails.getStudentsListByClass(classIndex);
+//    }
 
 
 }

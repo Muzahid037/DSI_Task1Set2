@@ -1,10 +1,19 @@
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Main {
+
+    private int getClassIndex(int className) {
+        int classIndex = -1;
+        if (className == 8) {
+            classIndex = 0;
+        } else if (className == 9) {
+            classIndex = 1;
+        } else if (className == 10) {
+            classIndex = 2;
+        }
+        return classIndex;
+    }
 
     private void showDashboard() {
         System.out.println("Press 1-Add a Student");
@@ -19,8 +28,7 @@ public class Main {
         Scanner scannerObj = new Scanner(System.in);
 
         System.out.println("Enter Student Id");
-        int studentId;
-        studentId = scannerObj.nextInt();
+        int studentId = scannerObj.nextInt();
 
         scannerObj.nextLine();
 
@@ -28,8 +36,13 @@ public class Main {
         String studentName = scannerObj.nextLine();
 
         System.out.println("Enter className-8/9/10");
-        int className; ///8,9,10
-        className = scannerObj.nextInt();
+        int className = scannerObj.nextInt();///8,9,10
+        int classIndex = getClassIndex(className);
+        if (classIndex == -1) {
+            System.out.println("Enter valid class");
+            return;
+        }
+
 
         HashMap<String, Boolean> subjectToBeTought = new HashMap<String, Boolean>(); ///math,eng,ban
         String[] subjects = {"Math", "Eng", "Ban"};
@@ -43,22 +56,81 @@ public class Main {
             subjectToBeTought.put(subjects[i], isTought);
         }
         Student std = new Student(studentId, className, studentName, subjectToBeTought,
-                0, 0, 0);
+                0.0, 0, 0.0);
         StudentsController stdController = new StudentsController();
-        stdController.addStudent(std);
+        stdController.addStudent(std, classIndex);
+        System.out.println("Student Added Successfully");
+    }
+
+    private void editStudent() {
+        Scanner scannerObj = new Scanner(System.in);
+
+        System.out.println("Enter className-8/9/10");
+        int className = scannerObj.nextInt();
+        int classIndex = getClassIndex(className);
+        if (classIndex == -1) {
+            System.out.println("Enter valid class");
+            return;
+        }
+
+        System.out.println("Enter Student Id");
+        int studentId = scannerObj.nextInt();
+
+        StudentsController stdController = new StudentsController();
+        ArrayList<Student> studentsByClass = stdController.getStudents(classIndex);
+
+        for (Student std : studentsByClass) {
+            if (std.studentId == studentId) {
+//                System.out.println(std.studentId + " " + std.studentName);
+
+                System.out.println("Enter How Many days you taught " + std.studentName + "?");
+                int dayTaught = scannerObj.nextInt();
+                std.totalDayTought += dayTaught;
+
+                HashMap<String, Boolean> subjectTought = std.subjectToBeTought;
+
+                double totalMarks = 0.0;
+                int numberOfSubjectTought = 0;
+                for (Map.Entry mapElement : subjectTought.entrySet()) {
+                    String subject = (String) mapElement.getKey();
+                    boolean isTaught = (Boolean) mapElement.getValue();
+                    if (isTaught == true) {
+                        numberOfSubjectTought++;
+                        std.totalEarning += (dayTaught * 1.0);
+                        System.out.println("Enter marks got in" + subject + " by him/r?");
+                        double marks = scannerObj.nextDouble();
+                        totalMarks += marks;
+                    }
+//                    System.out.println(subject + " : " + isTaught);
+                }
+                std.avgMarks = (totalMarks / numberOfSubjectTought);
+
+            }
+        }
+
     }
 
     private void showStudentList() {
 //        System.out.println("Ashci");
         Scanner scannerObj = new Scanner(System.in);
 
-        System.out.println("Students");
+
+        System.out.println("Enter className-8/9/10");
+        int className = scannerObj.nextInt();
+        int classIndex = getClassIndex(className);
+        if (classIndex == -1) {
+            System.out.println("Enter valid class");
+            return;
+        }
+
+        System.out.println("Enter Student Id");
+        int studentId = scannerObj.nextInt();
+
         StudentsController stdController = new StudentsController();
-        ArrayList<Student> studentsList = stdController.getStudents();
+        ArrayList<Student> studentsByClass = stdController.getStudents(classIndex);
 
 
         Formatter formatter = new Formatter();
-
         int idMaxLength = 7;
         String idFormat = "%-" + idMaxLength + "." + idMaxLength + "s";
 
@@ -72,11 +144,40 @@ public class Main {
         String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
 
         System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, "Id", "Name", "Earning", "Avg-Marks"));
-        for (Student s : studentsList) {
+        for (Student s : studentsByClass) {
             formatter = new Formatter();
             System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, s.studentId,
                     s.studentName, s.totalEarning, s.avgMarks));
         }
+
+
+//
+//        System.out.println("Students");
+//        StudentsController stdController = new StudentsController();
+//
+//        ArrayList<Student> studentsList = stdController.getStudents();
+//
+//
+//        Formatter formatter = new Formatter();
+//
+//        int idMaxLength = 7;
+//        String idFormat = "%-" + idMaxLength + "." + idMaxLength + "s";
+//
+//        int nameMaxLength = 25;
+//        String nameFormat = "%-" + nameMaxLength + "." + nameMaxLength + "s";
+//
+//        int earningMaxLength = 15;
+//        String earningFormat = "%-" + earningMaxLength + "." + earningMaxLength + "s";
+//
+//        int avgMarksMaxLength = 15;
+//        String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
+//
+//        System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, "Id", "Name", "Earning", "Avg-Marks"));
+//        for (Student s : studentsList) {
+//            formatter = new Formatter();
+//            System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat, s.studentId,
+//                    s.studentName, s.totalEarning, s.avgMarks));
+//        }
 
     }
 
@@ -97,7 +198,7 @@ public class Main {
                     mainInstance.addStudent();
                     break;
                 case 2:
-                    System.out.println("2");
+                    mainInstance.editStudent();
                     break;
                 case 3:
                     System.out.println("3");
