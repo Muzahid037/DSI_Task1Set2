@@ -6,7 +6,6 @@ public class StudentsDetails {
 
     private StudentsDetails() {
         studentsList = new ArrayList[3];
-//        studentsList = new ArrayList<Student>();
         for (int i = 0; i < 3; i++) {
             studentsList[i] = new ArrayList<Student>();
         }
@@ -20,7 +19,7 @@ public class StudentsDetails {
         return StudentsDetails;
     }
 
-    public ArrayList<Student> getStudentsList(int classIndex) {
+    public ArrayList<Student> getStudentsList(Integer classIndex) {
         return studentsList[classIndex];
     }
 

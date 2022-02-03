@@ -11,7 +11,7 @@ public class StudentsController {
         }
     }
 
-    public void addStudent(Student student,int classIndex) {
+    public void addStudent(Student student,Integer classIndex) {
         studentsDetails.getStudentsList(classIndex).add(student);
     }
 

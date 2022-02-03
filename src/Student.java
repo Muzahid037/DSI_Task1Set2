@@ -5,9 +5,8 @@ public class Student {
     String studentName;
     HashMap<String, Boolean> subjectToBeTought; ///math,eng,ban
     Double avgMarks;
-
-    int totalDayTought;
-    double totalEarning;
+    Integer totalDayTought;
+    Double totalEarning;
 
     public Student(Integer studentId,Integer className,String studentName, HashMap<String, Boolean> subjectToBeTought,
                    Double avgMarks,Integer totalDayTought,Double totalEarning)
@@ -20,8 +19,8 @@ public class Student {
         this.totalDayTought=totalDayTought;
         this.totalEarning=totalEarning;
     }
-    public Integer getStudent_id()
+    public Integer getStudentId()
     {
-        return studentId;
+        return this.studentId;
     }
 }
