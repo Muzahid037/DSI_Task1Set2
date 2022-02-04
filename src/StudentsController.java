@@ -15,20 +15,31 @@ public class StudentsController {
         studentsDetails.getStudentsList(classIndex).add(student);
     }
 
-    public void editStudent(Student student) {
+    public void setTotalDayTaughtByClass(Integer classIndex)
+    {
+        studentsDetails.getTotalDayTaughtByClass(classIndex);
+    }
+
+    public void getTotalDayTaughtByClass(Integer classIndex)
+    {
+        studentsDetails.getTotalDayTaughtByClass(classIndex);
+    }
+
+//    public void editStudent() {
+//
 //        if (getStudentElementIndex(student.getStudent_id()) >= 0) {
 //            studentsDetails.getStudentsList().set(getStudentElementIndex(
 //                    student.getStudent_id()), student);
 //        }
-    }
+//    }
 
 
-    public void delete_student(Integer student_id) {
+//    public void delete_student(Integer student_id) {
 //        if (getStudentElementIndex(student_id) >= 0) {
 //            studentsDetails.getStudentsList().remove(getStudentElementIndex(
 //                    student_id));
 //        }
-    }
+//    }
 
 //    public int getStudentElementIndex(Integer student_id) {
 //        for(Student s: studentsDetails.getStudentsList()) {

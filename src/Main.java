@@ -2,45 +2,42 @@ import java.util.*;
 
 
 public class Main {
+    StudentsDetails studentsDetails;
 
-    private Integer getClassIndex(Integer className) {
-        Integer classIndex = -1;
-        if (className == 8) {
-            classIndex = 0;
-        } else if (className == 9) {
-            classIndex = 1;
-        } else if (className == 10) {
-            classIndex = 2;
+    public Main() {
+        {
+            studentsDetails = studentsDetails.getInstance();
         }
-        return classIndex;
     }
 
     private void showDashboard() {
+        System.out.println("----------------------------------------------\n");
         System.out.println("Press 1-Add a Student");
         System.out.println("Press 2-Edit a Student");
         System.out.println("Press 3-Delete a Student");
         System.out.println("Press 4-See the list of students individually");
         System.out.println("Press 5-See overall info");
         System.out.println("Press 6-Exit");
+        System.out.println("\n----------------------------------------------");
     }
 
     private void addStudent() {
+
         Scanner scannerObj = new Scanner(System.in);
 
         System.out.println("Enter className-8/9/10");
         Integer className = Integer.parseInt(scannerObj.nextLine());
+        Integer classIndex = studentsDetails.getClassIndex(className);
+        if (classIndex == -1) {
+            System.out.println("Enter valid class");
+            return;
+        }
 
         System.out.println("Enter Student Id");
         Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
         System.out.println("Enter Student Name");
         String studentName = scannerObj.nextLine();
-
-        Integer classIndex = getClassIndex(className);
-        if (classIndex == -1) {
-            System.out.println("Enter valid class");
-            return;
-        }
 
 
         HashMap<String, Boolean> subjectToBeTought = new HashMap<String, Boolean>(); ///math,eng,ban
@@ -56,8 +53,8 @@ public class Main {
         }
         Student std = new Student(studentId, className, studentName, subjectToBeTought,
                 0.0, 0, 0.0);
-        StudentsController stdController = new StudentsController();
-        stdController.addStudent(std, classIndex);
+
+        studentsDetails.addStudent(std, classIndex);
         System.out.println("Student Added Successfully");
     }
 
@@ -66,7 +63,7 @@ public class Main {
 
         System.out.println("Enter className-8/9/10");
         Integer className = Integer.parseInt(scannerObj.nextLine());
-        Integer classIndex = getClassIndex(className);
+        Integer classIndex = studentsDetails.getClassIndex(className);
         if (classIndex == -1) {
             System.out.println("Enter valid class");
             return;
@@ -75,37 +72,62 @@ public class Main {
         System.out.println("Enter Student Id");
         Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
-        StudentsController stdController = new StudentsController();
-        ArrayList<Student> studentsByClass = stdController.getStudents(classIndex);
+
+        ArrayList<Student> studentsByClass = studentsDetails.getStudentsList(classIndex);
 
         for (Student std : studentsByClass) {
             if (std.studentId == studentId) {
-//                System.out.println(std.studentId + " " + std.studentName);
 
                 System.out.println("Enter How Many days you taught " + std.studentName + "?");
                 Integer dayTaught = Integer.parseInt(scannerObj.nextLine());
-                std.totalDayTought += dayTaught;
 
                 HashMap<String, Boolean> subjectTought = std.subjectToBeTought;
 
-                Double totalMarks = 0.0;
+                Double totalMarks = 0.0, totalEarning = 0.0;
                 Integer numberOfSubjectTought = 0;
                 for (Map.Entry mapElement : subjectTought.entrySet()) {
                     String subject = (String) mapElement.getKey();
                     boolean isTaught = (Boolean) mapElement.getValue();
                     if (isTaught == true) {
                         numberOfSubjectTought++;
-                        std.totalEarning += (dayTaught * 1.0);
+                        totalEarning += (dayTaught * 1.0);
                         System.out.println("Enter marks got in " + subject + " by " + std.studentName + "?");
                         Double marks = Double.parseDouble(scannerObj.nextLine());
                         totalMarks += marks;
                     }
                 }
-                std.avgMarks = (totalMarks / numberOfSubjectTought);
 
+                std.totalEarning = totalEarning;
+                std.avgMarks = (totalMarks / numberOfSubjectTought);
+                std.totalDayTought += dayTaught;
+
+                studentsDetails.setTotalDayTaughtByClass(classIndex, dayTaught);
+                studentsDetails.setTotalEarningByClass(classIndex, totalEarning);
+                studentsDetails.setTotalMarkXmCountAllStd(numberOfSubjectTought, totalMarks);
             }
         }
 
+    }
+
+    private void deleteStudent() {
+        Scanner scannerObj = new Scanner(System.in);
+
+        System.out.println("Enter className-8/9/10");
+        Integer className = Integer.parseInt(scannerObj.nextLine());
+        Integer classIndex = studentsDetails.getClassIndex(className);
+        if (classIndex == -1) {
+            System.out.println("Enter valid class");
+            return;
+        }
+        System.out.println("Enter Student Id");
+        Integer studentId = Integer.parseInt(scannerObj.nextLine());
+
+        Integer isDeleted = studentsDetails.removeStudent(studentId, classIndex);
+        if (isDeleted ==1) {
+            System.out.println("The Student was deleted successfully!");
+        } else {
+            System.out.println("There is no student with id: " + studentId);
+        }
     }
 
     private void showStudentList() {
@@ -113,14 +135,13 @@ public class Main {
 
         System.out.println("Enter className-8/9/10");
         Integer className = Integer.parseInt(scannerObj.nextLine());
-        Integer classIndex = getClassIndex(className);
+        Integer classIndex = studentsDetails.getClassIndex(className);
         if (classIndex == -1) {
             System.out.println("Enter valid class");
             return;
         }
 
-        StudentsController stdController = new StudentsController();
-        ArrayList<Student> studentsByClass = stdController.getStudents(classIndex);
+        ArrayList<Student> studentsByClass = studentsDetails.getStudentsList(classIndex);
 
         if (studentsByClass.size() > 0) {
 
@@ -216,6 +237,44 @@ public class Main {
 
     }
 
+    private void showDayTaughtByClass() {
+        Integer dayTaughtClass8 = studentsDetails.getTotalDayTaughtByClass(0);
+        Integer dayTaughtClass9 = studentsDetails.getTotalDayTaughtByClass(1);
+        Integer dayTaughtClass10 = studentsDetails.getTotalDayTaughtByClass(2);
+        System.out.println("Class-8 has been taught for <" + dayTaughtClass8 + "> days");
+        System.out.println("Class-9 has been taught for <" + dayTaughtClass9 + "> days");
+        System.out.println("Class-10 has been taught for <" + dayTaughtClass10 + "> days");
+    }
+
+    private void showDayTaughtAllClass() {
+        Integer dayTaughtClass8 = studentsDetails.getTotalDayTaughtByClass(0);
+        Integer dayTaughtClass9 = studentsDetails.getTotalDayTaughtByClass(1);
+        Integer dayTaughtClass10 = studentsDetails.getTotalDayTaughtByClass(2);
+        Integer dayTaughtAllClass = dayTaughtClass8 + dayTaughtClass9 + dayTaughtClass10;
+        System.out.println("All Classes has been taught for <" + dayTaughtAllClass + "> days");
+    }
+
+    private void showEarningByClass() {
+        Integer earningFromClass8 = studentsDetails.getTotalDayTaughtByClass(0);
+        Integer earningFromClass9 = studentsDetails.getTotalDayTaughtByClass(1);
+        Integer earningFromClass10 = studentsDetails.getTotalDayTaughtByClass(2);
+        System.out.println("Earning from Class-8: " + earningFromClass8);
+        System.out.println("Earning from Class-9: " + earningFromClass9);
+        System.out.println("Earning from Class-10: " + earningFromClass10);
+    }
+
+    private void showAvgMarksOfAllStd() {
+        Double avgMarksOfAllStd = studentsDetails.getAvgMarksAllStd();
+        System.out.println("Average Marks of All Students: " + avgMarksOfAllStd);
+    }
+
+    public void showOverAllInfo() {
+        showDayTaughtByClass();
+        showDayTaughtAllClass();
+        showEarningByClass();
+        showAvgMarksOfAllStd();
+    }
+
     public static void main(String[] args) {
 
         Main mainInstance = new Main();
@@ -236,18 +295,23 @@ public class Main {
                     mainInstance.editStudent();
                     break;
                 case 3:
-                    System.out.println("3");
+                    System.out.println("3"); ///dlt
+                    mainInstance.deleteStudent();
                     break;
                 case 4:
-                    System.out.println("4");
+//                    System.out.println("4"); ///std list
                     mainInstance.showStudentList();
                     break;
                 case 5:
-                    System.out.println("5");
+//                    System.out.println("show ovr all info");
+                    mainInstance.showOverAllInfo();
+                    break;
+
+                case 6:
+                    exit = 1;
                     break;
 
                 default:
-                    exit = 1;
                     break;
             }
         }
