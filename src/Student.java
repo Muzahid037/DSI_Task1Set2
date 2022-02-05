@@ -23,4 +23,56 @@ public class Student {
     {
         return this.studentId;
     }
+
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
+    }
+
+    public Integer getClassName() {
+        return className;
+    }
+
+    public void setClassName(Integer className) {
+        this.className = className;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public HashMap<String, Boolean> getSubjectToBeTought() {
+        return subjectToBeTought;
+    }
+
+    public void setSubjectToBeTought(HashMap<String, Boolean> subjectToBeTought) {
+        this.subjectToBeTought = subjectToBeTought;
+    }
+
+    public Double getAvgMarks() {
+        return avgMarks;
+    }
+
+    public void setAvgMarks(Double avgMarks) {
+        this.avgMarks = avgMarks;
+    }
+
+    public Integer getTotalDayTought() {
+        return totalDayTought;
+    }
+
+    public void setTotalDayTought(Integer totalDayTought) {
+        this.totalDayTought = totalDayTought;
+    }
+
+    public Double getTotalEarning() {
+        return totalEarning;
+    }
+
+    public void setTotalEarning(Double totalEarning) {
+        this.totalEarning = totalEarning;
+    }
 }
