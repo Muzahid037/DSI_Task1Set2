@@ -10,7 +10,7 @@ public class Main {
         }
     }
 
-    private void showDashboard() {
+    private void showMenuboard() {
         System.out.println("----------------------------------------------\n");
         System.out.println("Press 1-Add a Student");
         System.out.println("Press 2-Edit a Student");
@@ -312,7 +312,7 @@ public class Main {
         Integer exit = 0;
         while (exit == 0) {
 
-            mainInstance.showDashboard();
+            mainInstance.showMenuboard();
 
             try {
 
