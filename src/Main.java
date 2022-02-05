@@ -10,16 +10,6 @@ public class Main {
         }
     }
 
-//    private Integer readInteger() {
-//        Scanner scannerObj = new Scanner(System.in);
-//        try {
-//            Integer input = Integer.parseInt(scannerObj.nextLine());
-//            return input;
-//        } catch (Exception e) {
-//            System.out.println(" Process Unsuccessful...Enter valid Input.");
-//        }
-//    }
-
     private void showDashboard() {
         System.out.println("----------------------------------------------\n");
         System.out.println("Press 1-Add a Student");
@@ -29,6 +19,35 @@ public class Main {
         System.out.println("Press 5-See overall info");
         System.out.println("Press 6-Exit");
         System.out.println("\n----------------------------------------------");
+    }
+
+    private Student createStudent(Integer className) {
+        Scanner scannerObj = new Scanner(System.in);
+
+        System.out.println("Enter Student Id");
+        Integer studentId = Integer.parseInt(scannerObj.nextLine());
+
+        System.out.println("Enter Student Name");
+        String studentName = scannerObj.nextLine();
+
+        HashMap<String, Boolean> subjectToBeTought = new HashMap<String, Boolean>(); ///math,eng,ban
+        String[] subjects = {"Math", "Eng", "Ban"};
+        for (Integer i = 0; i < subjects.length; i++) {
+            System.out.println("Do you teach " + subjects[i] + "? Press 1-YES, 2-NO");
+            Integer yesOrNo = Integer.parseInt(scannerObj.nextLine());
+            boolean isTought = false;
+            if (yesOrNo == 1) {
+                isTought = true;
+            } else if (yesOrNo != 2) {
+                System.out.println("Enter valid input");
+                return null;
+            }
+            subjectToBeTought.put(subjects[i], isTought);
+        }
+        Student std = new Student(studentId, className, studentName, subjectToBeTought,
+                0.0, 0, 0.0);
+
+        return std;
     }
 
     private void addStudent() {
@@ -43,29 +62,11 @@ public class Main {
                 return;
             }
 
-            System.out.println("Enter Student Id");
-            Integer studentId = Integer.parseInt(scannerObj.nextLine());
-
-            System.out.println("Enter Student Name");
-            String studentName = scannerObj.nextLine();
-
-
-            HashMap<String, Boolean> subjectToBeTought = new HashMap<String, Boolean>(); ///math,eng,ban
-            String[] subjects = {"Math", "Eng", "Ban"};
-            for (Integer i = 0; i < subjects.length; i++) {
-                System.out.println("Do you teach " + subjects[i] + "? Press 1-YES, 2-NO");
-                Integer yesOrNo = Integer.parseInt(scannerObj.nextLine());
-                boolean isTought = false;
-                if (yesOrNo == 1) {
-                    isTought = true;
-                }
-                subjectToBeTought.put(subjects[i], isTought);
+            Student newStudent = createStudent(className);
+            if (newStudent != null) {
+                StudentsController.addStudent(newStudent, classIndex);
+                System.out.println("Student Added Successfully");
             }
-            Student std = new Student(studentId, className, studentName, subjectToBeTought,
-                    0.0, 0, 0.0);
-
-            StudentsController.addStudent(std, classIndex);
-            System.out.println("Student Added Successfully");
 
         } catch (Exception e) {
             System.out.println("Enter valid Input");
@@ -89,15 +90,15 @@ public class Main {
             Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
 
-            ArrayList<Student> studentsByClass = StudentsController.getStudentsList(classIndex);
+            ArrayList<Student> studentsByClass = StudentsController.getStudentsListByClass(classIndex);
             Boolean isStdIdExist = new Boolean(false);
             for (Student std : studentsByClass) {
-                if (std.studentId == studentId) {
+                if (std.getStudentId() == studentId) {
 
-                    System.out.println("Enter How Many days you taught " + std.studentName + "?");
+                    System.out.println("Enter How Many days you taught " + std.getStudentName() + "?");
                     Integer dayTaught = Integer.parseInt(scannerObj.nextLine());
 
-                    HashMap<String, Boolean> subjectTought = std.subjectToBeTought;
+                    HashMap<String, Boolean> subjectTought = std.getSubjectToBeTought();
 
                     Double totalMarks = 0.0, totalEarning = 0.0;
                     Integer numberOfSubjectTought = 0;
@@ -107,15 +108,15 @@ public class Main {
                         if (isTaught == true) {
                             numberOfSubjectTought++;
                             totalEarning += (dayTaught * 1.0);
-                            System.out.println("Enter marks got in " + subject + " by " + std.studentName + "?");
+                            System.out.println("Enter marks got in " + subject + " by " + std.getStudentName() + "?");
                             Double marks = Double.parseDouble(scannerObj.nextLine());
                             totalMarks += marks;
                         }
                     }
 
-                    std.totalEarning = totalEarning;
-                    std.avgMarks = (totalMarks / numberOfSubjectTought);
-                    std.totalDayTought += dayTaught;
+                    std.setTotalEarning(totalEarning);
+                    std.setAvgMarks(totalMarks / numberOfSubjectTought);
+                    std.setTotalDayTought(dayTaught);
 
                     StudentsController.setTotalDayTaughtByClass(classIndex, dayTaught);
                     StudentsController.setTotalEarningByClass(classIndex, totalEarning);
@@ -150,6 +151,7 @@ public class Main {
             Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
             Integer isDeleted = StudentsController.removeStudent(studentId, classIndex);
+
             if (isDeleted == 1) {
                 System.out.println("The Student was deleted successfully!");
             } else {
@@ -172,7 +174,7 @@ public class Main {
                 return;
             }
 
-            ArrayList<Student> studentsByClass = StudentsController.getStudentsList(classIndex);
+            ArrayList<Student> studentsByClass = StudentsController.getStudentsListByClass(classIndex);
 
             if (studentsByClass.size() > 0) {
 
@@ -194,7 +196,7 @@ public class Main {
                 for (Student s : studentsByClass) {
                     formatter = new Formatter();
                     System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
-                            s.studentId, s.studentName, s.totalEarning, s.avgMarks));
+                            s.getStudentId(), s.getStudentName(), s.getTotalEarning(), s.getAvgMarks()));
                 }
 
                 System.out.println("Wanna see details any of the above student? Press 1-YES, 2-NO");
@@ -211,17 +213,14 @@ public class Main {
                     Double specificTotalEarning = new Double(0.0);
                     Boolean isExistStd = false;
                     for (Student std : studentsByClass) {
-                        if (std.studentId == specificStudentId) {
+                        if (std.getStudentId() == specificStudentId) {
                             isExistStd = true;
-                            specificClassName = std.className;
-                            specificStudentName = std.studentName;
-                            specificSubjectTought = std.subjectToBeTought;
-                            specificAvgMarks = std.avgMarks;
-                            specificTotalDayTought = std.totalDayTought;
-                            specificTotalEarning = std.totalEarning;
-
-//                        System.out.println(std.studentId + " " + std.className + " " +
-//                                std.avgMarks + " " + std.totalDayTought + " " + std.totalEarning);
+                            specificClassName = std.getClassName();
+                            specificStudentName = std.getStudentName();
+                            specificSubjectTought = std.getSubjectToBeTought();
+                            specificAvgMarks = std.getAvgMarks();
+                            specificTotalDayTought = std.getTotalDayTought();
+                            specificTotalEarning = std.getTotalEarning();
                         }
                     }
                     if (isExistStd == true) {
@@ -271,20 +270,17 @@ public class Main {
 
     }
 
-    private void showDayTaughtByClass() {
+    private Integer showDayTaughtByClass() {
         Integer dayTaughtClass8 = StudentsController.getTotalDayTaughtByClass(0);
         Integer dayTaughtClass9 = StudentsController.getTotalDayTaughtByClass(1);
         Integer dayTaughtClass10 = StudentsController.getTotalDayTaughtByClass(2);
         System.out.println("Class-8 has been taught for <" + dayTaughtClass8 + "> days");
         System.out.println("Class-9 has been taught for <" + dayTaughtClass9 + "> days");
         System.out.println("Class-10 has been taught for <" + dayTaughtClass10 + "> days");
+        return dayTaughtClass8 + dayTaughtClass9 + dayTaughtClass10;
     }
 
-    private void showDayTaughtAllClass() {
-        Integer dayTaughtClass8 = StudentsController.getTotalDayTaughtByClass(0);
-        Integer dayTaughtClass9 = StudentsController.getTotalDayTaughtByClass(1);
-        Integer dayTaughtClass10 = StudentsController.getTotalDayTaughtByClass(2);
-        Integer dayTaughtAllClass = dayTaughtClass8 + dayTaughtClass9 + dayTaughtClass10;
+    private void showDayTaughtAllClass(Integer dayTaughtAllClass) {
         System.out.println("All Classes has been taught for <" + dayTaughtAllClass + "> days");
     }
 
@@ -303,8 +299,8 @@ public class Main {
     }
 
     public void showOverAllInfo() {
-        showDayTaughtByClass();
-        showDayTaughtAllClass();
+        Integer dayTaughtAllClass = showDayTaughtByClass();
+        showDayTaughtAllClass(dayTaughtAllClass);
         showEarningByClass();
         showAvgMarksOfAllStd();
     }

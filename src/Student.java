@@ -1,12 +1,12 @@
 import java.util.HashMap;
 public class Student {
-    Integer studentId;
-    Integer className; ///8,9,10
-    String studentName;
-    HashMap<String, Boolean> subjectToBeTought; ///math,eng,ban
-    Double avgMarks;
-    Integer totalDayTought;
-    Double totalEarning;
+    private Integer studentId;
+    private Integer className; ///8,9,10
+    private String studentName;
+    private HashMap<String, Boolean> subjectToBeTought; ///math,eng,ban
+    private Double avgMarks;
+    private Integer totalDayTought;
+    private Double totalEarning;
 
     public Student(Integer studentId,Integer className,String studentName, HashMap<String, Boolean> subjectToBeTought,
                    Double avgMarks,Integer totalDayTought,Double totalEarning)
@@ -24,32 +24,16 @@ public class Student {
         return this.studentId;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
-    }
-
     public Integer getClassName() {
         return className;
-    }
-
-    public void setClassName(Integer className) {
-        this.className = className;
     }
 
     public String getStudentName() {
         return studentName;
     }
 
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
-    }
-
     public HashMap<String, Boolean> getSubjectToBeTought() {
         return subjectToBeTought;
-    }
-
-    public void setSubjectToBeTought(HashMap<String, Boolean> subjectToBeTought) {
-        this.subjectToBeTought = subjectToBeTought;
     }
 
     public Double getAvgMarks() {

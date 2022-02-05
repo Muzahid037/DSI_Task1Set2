@@ -54,7 +54,7 @@ public class StudentsController {
         Student deleteAbleStd = null;
         Integer isDeleted=0;
         for (Student std : studentsList[classIndex]) {
-            if (std.studentId.equals(studentID)) {
+            if (std.getStudentId().equals(studentID)) {
                 deleteAbleStd = std;
                 isDeleted=1;
                 break;
@@ -64,7 +64,7 @@ public class StudentsController {
         return isDeleted;
     }
 
-    public ArrayList<Student> getStudentsList(Integer classIndex) {
+    public ArrayList<Student> getStudentsListByClass(Integer classIndex) {
         return studentsList[classIndex];
     }
 
