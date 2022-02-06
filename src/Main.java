@@ -1,8 +1,10 @@
+import java.io.IOException;
 import java.util.*;
 
 
 public class Main {
     StudentsController StudentsController;
+    private static Scanner scannerObj = new Scanner(System.in);
 
     public Main() {
         {
@@ -10,7 +12,8 @@ public class Main {
         }
     }
 
-    private void showMenuboard() {
+    private static void showMenuboard() {
+        clearScreen();
         System.out.println("----------------------------------------------\n");
         System.out.println("Press 1-Add a Student");
         System.out.println("Press 2-Edit a Student");
@@ -22,8 +25,6 @@ public class Main {
     }
 
     private Student createStudent(Integer className) {
-        Scanner scannerObj = new Scanner(System.in);
-
         System.out.println("Enter Student Id");
         Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
@@ -53,7 +54,6 @@ public class Main {
     private void addStudent() {
 
         try {
-            Scanner scannerObj = new Scanner(System.in);
             System.out.println("Enter className-8/9/10");
             Integer className = Integer.parseInt(scannerObj.nextLine());
             Integer classIndex = StudentsController.getClassIndex(className);
@@ -65,7 +65,8 @@ public class Main {
             Student newStudent = createStudent(className);
             if (newStudent != null) {
                 StudentsController.addStudent(newStudent, classIndex);
-                System.out.println("Student Added Successfully");
+                System.out.println("Student with ID:" + newStudent.getStudentId() +
+                        " was added successfully from Class:" + newStudent.getClassName());
             }
 
         } catch (Exception e) {
@@ -76,9 +77,7 @@ public class Main {
     private void editStudent() {
 
         try {
-            Scanner scannerObj = new Scanner(System.in);
-
-            System.out.println("Enter className-8/9/10");
+            System.out.println("Enter className(8/9/10) to edit a student");
             Integer className = Integer.parseInt(scannerObj.nextLine());
             Integer classIndex = StudentsController.getClassIndex(className);
             if (classIndex == -1) {
@@ -123,12 +122,14 @@ public class Main {
                     StudentsController.setTotalMarkXmCountAllStd(numberOfSubjectTought, totalMarks);
 
                     isStdIdExist = true;
+
+                    break;
                 }
             }
             if (isStdIdExist) {
-                System.out.println("Student Edited successfully");
+                System.out.println("Student with ID:" + studentId + " was edited successfully from Class:" + className);
             } else {
-                System.out.println("No student for Edit with Student ID: " + studentId);
+                System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
             }
         } catch (Exception e) {
             System.out.println("Enter valid Input");
@@ -138,9 +139,7 @@ public class Main {
 
     private void deleteStudent() {
         try {
-            Scanner scannerObj = new Scanner(System.in);
-
-            System.out.println("Enter className-8/9/10");
+            System.out.println("Enter className(8/9/10) to delete a Student");
             Integer className = Integer.parseInt(scannerObj.nextLine());
             Integer classIndex = StudentsController.getClassIndex(className);
             if (classIndex == -1) {
@@ -153,52 +152,58 @@ public class Main {
             Integer isDeleted = StudentsController.removeStudent(studentId, classIndex);
 
             if (isDeleted == 1) {
-                System.out.println("The Student was deleted successfully!");
+                System.out.println("Student with ID:" + studentId + " was deleted successfully from Class:" + className);
             } else {
-                System.out.println("There is no student with id: " + studentId);
+                System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
             }
         } catch (Exception e) {
             System.out.println("Enter valid Input");
         }
     }
 
+    private ArrayList<Student> showStudentListByClassName() {
+        System.out.println("Enter a className(8/9/10) to see the List of the Students");
+        Integer className = Integer.parseInt(scannerObj.nextLine());
+        Integer classIndex = StudentsController.getClassIndex(className);
+        if (classIndex == -1) {
+            System.out.println("Enter valid class");
+            return null;
+        }
+
+        ArrayList<Student> studentsByClass = StudentsController.getStudentsListByClass(classIndex);
+
+        if (studentsByClass.size() > 0) {
+
+            Formatter formatter = new Formatter();
+            Integer idMaxLength = 7;
+            String idFormat = "%-" + idMaxLength + "." + idMaxLength + "s";
+
+            Integer nameMaxLength = 22;
+            String nameFormat = "%-" + nameMaxLength + "." + nameMaxLength + "s";
+
+            Integer earningMaxLength = 15;
+            String earningFormat = "%-" + earningMaxLength + "." + earningMaxLength + "s";
+
+            Integer avgMarksMaxLength = 15;
+            String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
+
+            System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
+                    "Id", "Name", "Earning", "Avg-Marks"));
+            for (Student s : studentsByClass) {
+                formatter = new Formatter();
+                System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
+                        s.getStudentId(), s.getStudentName(), s.getTotalEarning(), s.getAvgMarks()));
+            }
+        }
+        return studentsByClass;
+    }
+
     private void showStudentList() {
         try {
-            Scanner scannerObj = new Scanner(System.in);
 
-            System.out.println("Enter className-8/9/10");
-            Integer className = Integer.parseInt(scannerObj.nextLine());
-            Integer classIndex = StudentsController.getClassIndex(className);
-            if (classIndex == -1) {
-                System.out.println("Enter valid class");
-                return;
-            }
-
-            ArrayList<Student> studentsByClass = StudentsController.getStudentsListByClass(classIndex);
+            ArrayList<Student> studentsByClass = showStudentListByClassName();
 
             if (studentsByClass.size() > 0) {
-
-                Formatter formatter = new Formatter();
-                Integer idMaxLength = 7;
-                String idFormat = "%-" + idMaxLength + "." + idMaxLength + "s";
-
-                Integer nameMaxLength = 22;
-                String nameFormat = "%-" + nameMaxLength + "." + nameMaxLength + "s";
-
-                Integer earningMaxLength = 15;
-                String earningFormat = "%-" + earningMaxLength + "." + earningMaxLength + "s";
-
-                Integer avgMarksMaxLength = 15;
-                String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
-
-                System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
-                        "Id", "Name", "Earning", "Avg-Marks"));
-                for (Student s : studentsByClass) {
-                    formatter = new Formatter();
-                    System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
-                            s.getStudentId(), s.getStudentName(), s.getTotalEarning(), s.getAvgMarks()));
-                }
-
                 System.out.println("Wanna see details any of the above student? Press 1-YES, 2-NO");
                 Integer isWanted = Integer.parseInt(scannerObj.nextLine());
                 if (isWanted == 1) {
@@ -225,7 +230,13 @@ public class Main {
                     }
                     if (isExistStd == true) {
 
-                        formatter = new Formatter();
+                        Formatter formatter = new Formatter();
+
+                        Integer idMaxLength = 7;
+                        String idFormat = "%-" + idMaxLength + "." + idMaxLength + "s";
+
+                        Integer nameMaxLength = 22;
+                        String nameFormat = "%-" + nameMaxLength + "." + nameMaxLength + "s";
 
                         Integer classNameMaxLength = 6;
                         String classNameFormat = "%-" + classNameMaxLength + "." + classNameMaxLength + "s";
@@ -233,8 +244,14 @@ public class Main {
                         Integer subjectMaxLength = 15;
                         String subjectFormat = "%-" + subjectMaxLength + "." + subjectMaxLength + "s";
 
+                        Integer avgMarksMaxLength = 15;
+                        String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
+
                         Integer dayTaughtMaxLength = 20;
                         String dayTaughtFormat = "%-" + dayTaughtMaxLength + "." + dayTaughtMaxLength + "s";
+
+                        Integer earningMaxLength = 15;
+                        String earningFormat = "%-" + earningMaxLength + "." + earningMaxLength + "s";
 
 
                         System.out.println(formatter.format(idFormat + classNameFormat + nameFormat + subjectFormat +
@@ -264,7 +281,8 @@ public class Main {
             } else {
                 System.out.println("There is no student in this class");
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             System.out.println("Enter valid Input");
         }
 
@@ -305,29 +323,60 @@ public class Main {
         showAvgMarksOfAllStd();
     }
 
+    public static void clearScreen() {
+        try {
+            if (System.getProperty("os.name").contains("Windows"))
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            else
+                Runtime.getRuntime().exec("clear");
+        } catch (IOException | InterruptedException ex) {
+        }
+    }
+
+    private static void pressAnyKeyToMenu() {
+        System.out.println("\nPress any key to go Main Menu...");
+        try {
+            System.in.read();
+            scannerObj.nextLine();
+            showMenuboard();
+        } catch (Exception e) {
+        }
+    }
+
     public static void main(String[] args) {
 
         Main mainInstance = new Main();
+        showMenuboard();
 
-        Integer exit = 0;
+        Integer exit = new Integer(0);
         while (exit == 0) {
 
-            mainInstance.showMenuboard();
-
             try {
-
                 Scanner scannerObj = new Scanner(System.in);
-                Integer choice = scannerObj.nextInt();
+                System.out.println("Enter Your Choice");
+                Integer choice = Integer.parseInt(scannerObj.nextLine());
+                String menuboard = "";
+                clearScreen();
 
                 switch (choice) {
                     case 1:
                         mainInstance.addStudent();
                         break;
                     case 2:
-                        mainInstance.editStudent();
+                        ArrayList<Student> studentsByClass = mainInstance.showStudentListByClassName();
+                        if (studentsByClass.size() > 0) {
+                            mainInstance.editStudent();
+                        } else {
+                            System.out.println("There is no student in this Class.");
+                        }
                         break;
                     case 3:
-                        mainInstance.deleteStudent();
+                        studentsByClass = mainInstance.showStudentListByClassName();
+                        if (studentsByClass.size() > 0) {
+                            mainInstance.deleteStudent();
+                        } else {
+                            System.out.println("There is no student in this Class.");
+                        }
                         break;
                     case 4:
                         mainInstance.showStudentList();
@@ -340,6 +389,9 @@ public class Main {
                         break;
                     default:
                         break;
+                }
+                if (exit != 1) {
+                    pressAnyKeyToMenu();
                 }
             } catch (Exception e) {
                 System.out.println("Enter valid Input");
