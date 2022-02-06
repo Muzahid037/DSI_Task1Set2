@@ -14,14 +14,14 @@ public class Main {
 
     private static void showMenuboard() {
         clearScreen();
-        System.out.println("----------------------------------------------\n");
+        System.out.println("+----------------------------------------------+");
         System.out.println("Press 1-Add a Student");
         System.out.println("Press 2-Edit a Student");
         System.out.println("Press 3-Delete a Student");
         System.out.println("Press 4-See the list of students individually");
         System.out.println("Press 5-See overall info");
         System.out.println("Press 6-Exit");
-        System.out.println("\n----------------------------------------------");
+        System.out.println("+----------------------------------------------+");
     }
 
     private Student createStudent(Integer className) {
@@ -187,6 +187,7 @@ public class Main {
             Integer avgMarksMaxLength = 15;
             String avgMarksFormat = "%-" + avgMarksMaxLength + "." + avgMarksMaxLength + "s";
 
+            System.out.println("+---------------------------------------------------------+");
             System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
                     "Id", "Name", "Earning", "Avg-Marks"));
             for (Student s : studentsByClass) {
@@ -194,6 +195,7 @@ public class Main {
                 System.out.println(formatter.format(idFormat + nameFormat + earningFormat + avgMarksFormat,
                         s.getStudentId(), s.getStudentName(), s.getTotalEarning(), s.getAvgMarks()));
             }
+            System.out.println("+---------------------------------------------------------+");
         }
         return studentsByClass;
     }
@@ -254,6 +256,7 @@ public class Main {
                         String earningFormat = "%-" + earningMaxLength + "." + earningMaxLength + "s";
 
 
+                        System.out.println("+--------------------------------------------------------------------------------------------------+");
                         System.out.println(formatter.format(idFormat + classNameFormat + nameFormat + subjectFormat +
                                         avgMarksFormat + dayTaughtFormat + earningFormat, "Id", "Class",
                                 "Name", "Subject", "Avg-Marks", "Day-Taught", "Earning"));
@@ -272,6 +275,7 @@ public class Main {
                                         avgMarksFormat + dayTaughtFormat + earningFormat, specificStudentId,
                                 specificClassName, specificStudentName, taughtSubjects, specificAvgMarks,
                                 specificTotalDayTought, specificTotalEarning));
+                        System.out.println("+--------------------------------------------------------------------------------------------------+");
 
                     } else {
                         System.out.println("There is no student with Id-" + specificStudentId);
