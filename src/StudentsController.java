@@ -5,8 +5,8 @@ public class StudentsController {
     private ArrayList<Student>[] studentsList;
     private ArrayList<Integer> totalDayTaughtAllClass;
     private ArrayList<Double> totalEarningAllClass;
-    Integer totalExamCount;
-    Double totalMarksCount;
+    private int totalExamCount;
+    private double totalMarksCount;
 
     private StudentsController() {
         studentsList = new ArrayList[3];
@@ -52,11 +52,11 @@ public class StudentsController {
     public Integer removeStudent(Integer studentID, Integer classIndex) {
 
         Student deleteAbleStd = null;
-        Integer isDeleted=0;
+        Integer isDeleted = 0;
         for (Student std : studentsList[classIndex]) {
             if (std.getStudentId().equals(studentID)) {
                 deleteAbleStd = std;
-                isDeleted=1;
+                isDeleted = 1;
                 break;
             }
         }
@@ -92,9 +92,11 @@ public class StudentsController {
         totalMarksCount += totalMarks;
     }
 
-    public Double getAvgMarksAllStd() {
+    public double getAvgMarksAllStd() {
         if (totalExamCount == 0) return 0.0;
-        else return totalMarksCount / totalExamCount;
+        double avgMarksAllStd = (totalMarksCount / totalExamCount);
+        avgMarksAllStd = (double) Math.round(avgMarksAllStd * 100) / 100;
+        return avgMarksAllStd;
     }
 
 

@@ -36,8 +36,8 @@ public class Student {
         return subjectToBeTought;
     }
 
-    public Double getAvgMarks() {
-        return avgMarks;
+    public double getAvgMarks() {
+        return (double) Math.round(avgMarks * 100) / 100;
     }
 
     public void setAvgMarks(Double avgMarks) {
