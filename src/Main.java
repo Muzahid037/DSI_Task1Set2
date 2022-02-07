@@ -178,7 +178,7 @@ public class Main {
                 System.out.println("There is no student in this class");
             }
         } catch (Exception e) {
-            System.out.println("Enter valid Input eitai");
+            System.out.println("Enter valid Input");
         }
     }
 
@@ -378,7 +378,7 @@ public class Main {
                     pressAnyKeyToMenu();
                 }
             } catch (Exception e) {
-                System.out.println("Enter valid Input eikhane");
+                System.out.println("Enter valid Input");
             }
         }
     }
