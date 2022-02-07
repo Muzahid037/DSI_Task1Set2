@@ -77,100 +77,110 @@ public class Main {
 
     private void editStudent() {
 
-        try {
-            System.out.println("Enter className(8/9/10) to edit a student");
-            Integer className = Integer.parseInt(scannerObj.nextLine());
-            Integer classIndex = StudentsController.getClassIndex(className);
-            if (classIndex == -1) {
-                System.out.println("Enter valid class");
-                return;
-            }
+        ArrayList<Student> studentsByClass = showStudentListByClassName();
+        if (studentsByClass.size() > 0) {
 
-            System.out.println("Enter Student Id");
-            Integer studentId = Integer.parseInt(scannerObj.nextLine());
+            try {
+//                System.out.println("Enter className(8/9/10) to edit a student");
+//                Integer className = Integer.parseInt(scannerObj.nextLine());
+                Integer className = studentsByClass.get(0).getClassName();
+                Integer classIndex = StudentsController.getClassIndex(className);
+
+                System.out.println("Enter Student Id");
+                Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
 
-            ArrayList<Student> studentsByClass = StudentsController.getStudentsListByClass(classIndex);
-            Boolean isStdIdExist = new Boolean(false);
-            for (Student std : studentsByClass) {
-                if (std.getStudentId() == studentId) {
+//                ArrayList<Student> studentsByClass = StudentsController.getStudentsListByClass(classIndex);
 
-                    System.out.println("Enter How Many days you taught " + std.getStudentName() + "?");
-                    Integer dayTaught = Integer.parseInt(scannerObj.nextLine());
+                Boolean isStdIdExist = new Boolean(false);
+                for (Student std : studentsByClass) {
+                    if (std.getStudentId() == studentId) {
 
-                    HashMap<String, Boolean> subjectTought = std.getSubjectToBeTought();
+                        System.out.println("Enter How Many days you taught " + std.getStudentName() + "?");
+                        Integer dayTaught = Integer.parseInt(scannerObj.nextLine());
 
-                    Double totalMarks = 0.0, totalEarning = 0.0;
-                    Integer numberOfSubjectTought = 0;
-                    for (Map.Entry mapElement : subjectTought.entrySet()) {
-                        String subject = (String) mapElement.getKey();
-                        boolean isTaught = (Boolean) mapElement.getValue();
-                        if (isTaught == true) {
-                            numberOfSubjectTought++;
-                            totalEarning += (dayTaught * 1.0);
-                            System.out.println("Enter marks got in " + subject + " by " + std.getStudentName() + "?");
-                            Double marks = Double.parseDouble(scannerObj.nextLine());
-                            totalMarks += marks;
+                        HashMap<String, Boolean> subjectTought = std.getSubjectToBeTought();
+
+                        Double totalMarks = 0.0, totalEarning = 0.0;
+                        Integer numberOfSubjectTought = 0;
+                        for (Map.Entry mapElement : subjectTought.entrySet()) {
+                            String subject = (String) mapElement.getKey();
+                            boolean isTaught = (Boolean) mapElement.getValue();
+                            if (isTaught == true) {
+                                numberOfSubjectTought++;
+                                totalEarning += (dayTaught * 1.0);
+                                System.out.println("Enter marks got in " + subject + " by " + std.getStudentName() + "?");
+                                Double marks = Double.parseDouble(scannerObj.nextLine());
+                                totalMarks += marks;
+                            }
                         }
+
+                        std.setTotalEarning(totalEarning);
+                        std.setAvgMarks(totalMarks / numberOfSubjectTought);
+                        std.setTotalDayTought(dayTaught);
+
+                        StudentsController.setTotalDayTaughtByClass(classIndex, dayTaught);
+                        StudentsController.setTotalEarningByClass(classIndex, totalEarning);
+                        StudentsController.setTotalMarkXmCountAllStd(numberOfSubjectTought, totalMarks);
+
+                        isStdIdExist = true;
+
+                        break;
                     }
-
-                    std.setTotalEarning(totalEarning);
-                    std.setAvgMarks(totalMarks / numberOfSubjectTought);
-                    std.setTotalDayTought(dayTaught);
-
-                    StudentsController.setTotalDayTaughtByClass(classIndex, dayTaught);
-                    StudentsController.setTotalEarningByClass(classIndex, totalEarning);
-                    StudentsController.setTotalMarkXmCountAllStd(numberOfSubjectTought, totalMarks);
-
-                    isStdIdExist = true;
-
-                    break;
                 }
+                if (isStdIdExist) {
+                    System.out.println("Student with ID:" + studentId + " was edited successfully from Class:" + className);
+                } else {
+                    System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
+                }
+            } catch (Exception e) {
+                System.out.println("Enter valid Input");
             }
-            if (isStdIdExist) {
-                System.out.println("Student with ID:" + studentId + " was edited successfully from Class:" + className);
-            } else {
-                System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
-            }
-        } catch (Exception e) {
-            System.out.println("Enter valid Input");
+
+        } else {
+            System.out.println("There is no student in this Class.");
         }
 
     }
 
     private void deleteStudent() {
-        try {
-            System.out.println("Enter className(8/9/10) to delete a Student");
-            Integer className = Integer.parseInt(scannerObj.nextLine());
-            Integer classIndex = StudentsController.getClassIndex(className);
-            if (classIndex == -1) {
-                System.out.println("Enter valid class");
-                return;
-            }
-            System.out.println("Enter Student Id");
-            Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
-            Integer isDeleted = StudentsController.removeStudent(studentId, classIndex);
+        ArrayList<Student> studentsByClass = showStudentListByClassName();
+        if (studentsByClass.size() > 0) {
+            try {
+//                System.out.println("Enter className(8/9/10) to delete a Student");
+//                Integer className = Integer.parseInt(scannerObj.nextLine());
+                Integer className = studentsByClass.get(0).getClassName();
+                Integer classIndex = StudentsController.getClassIndex(className);
 
-            if (isDeleted == 1) {
-                System.out.println("Student with ID:" + studentId + " was deleted successfully from Class:" + className);
-            } else {
-                System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
+                System.out.println("Enter Student Id");
+                Integer studentId = Integer.parseInt(scannerObj.nextLine());
+
+                Integer isDeleted = StudentsController.removeStudent(studentId, classIndex);
+
+                if (isDeleted == 1) {
+                    System.out.println("Student with ID:" + studentId + " was deleted successfully from Class:" + className);
+                } else {
+                    System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
+                }
+            } catch (Exception e) {
+                System.out.println("Enter valid Input");
             }
-        } catch (Exception e) {
-            System.out.println("Enter valid Input");
+        } else {
+            System.out.println("There is no student in this Class.");
         }
     }
 
     private ArrayList<Student> showStudentListByClassName() {
+
         System.out.println("Enter a className(8/9/10) to see the List of the Students");
         Integer className = Integer.parseInt(scannerObj.nextLine());
         Integer classIndex = StudentsController.getClassIndex(className);
+
         if (classIndex == -1) {
             System.out.println("Enter valid class");
             return null;
         }
-
         ArrayList<Student> studentsByClass = StudentsController.getStudentsListByClass(classIndex);
 
         if (studentsByClass.size() > 0) {
@@ -359,10 +369,10 @@ public class Main {
         }
     }
 
-    private Integer showStudentListByClassBeforeOperation() {
-        ArrayList<Student> studentsByClass = showStudentListByClassName();
-        return studentsByClass.size();
-    }
+//    private Integer showStudentListByClassBeforeOperation() {
+//        ArrayList<Student> studentsByClass = showStudentListByClassName();
+//        return studentsByClass.size();
+//    }
 
     public static void main(String[] args) {
 
@@ -376,7 +386,6 @@ public class Main {
                 Scanner scannerObj = new Scanner(System.in);
                 System.out.println("Enter Your Choice");
                 Integer choice = Integer.parseInt(scannerObj.nextLine());
-                String menuboard = "";
                 clearScreen();
 
                 switch (choice) {
@@ -384,19 +393,10 @@ public class Main {
                         mainInstance.addStudent();
                         break;
                     case 2:
-
-                        if (mainInstance.showStudentListByClassBeforeOperation() > 0) {
-                            mainInstance.editStudent();
-                        } else {
-                            System.out.println("There is no student in this Class.");
-                        }
+                        mainInstance.editStudent();
                         break;
                     case 3:
-                        if (mainInstance.showStudentListByClassBeforeOperation() > 0) {
-                            mainInstance.deleteStudent();
-                        } else {
-                            System.out.println("There is no student in this Class.");
-                        }
+                        mainInstance.deleteStudent();
                         break;
                     case 4:
                         mainInstance.showStudentList();
