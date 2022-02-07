@@ -1,4 +1,5 @@
 import java.util.HashMap;
+
 public class Student {
     private Integer studentId;
     private Integer className; ///8,9,10
@@ -19,6 +20,7 @@ public class Student {
         this.totalDayTought=totalDayTought;
         this.totalEarning=totalEarning;
     }
+
     public Integer getStudentId()
     {
         return this.studentId;
@@ -59,4 +61,5 @@ public class Student {
     public void setTotalEarning(Double totalEarning) {
         this.totalEarning = totalEarning;
     }
+
 }

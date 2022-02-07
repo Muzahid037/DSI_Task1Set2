@@ -5,8 +5,8 @@ public class StudentsController {
     private ArrayList<Student>[] studentsList;
     private ArrayList<Integer> totalDayTaughtAllClass;
     private ArrayList<Double> totalEarningAllClass;
-    private int totalExamCount;
-    private double totalMarksCount;
+    private Integer totalExamCount;
+    private Double totalMarksCount;
 
     private StudentsController() {
         studentsList = new ArrayList[3];
@@ -17,11 +17,9 @@ public class StudentsController {
             totalDayTaughtAllClass.add(0);
             totalEarningAllClass.add(0.0);
         }
-
         totalExamCount = 0;
         totalMarksCount = 0.0;
     }
-
 
     public static StudentsController getInstance() {
         if (StudentsController != null) {
@@ -32,7 +30,6 @@ public class StudentsController {
     }
 
     public void addStudent(Student student, Integer classIndex) {
-
         studentsList[classIndex].add(student);
     }
 
@@ -48,9 +45,7 @@ public class StudentsController {
         return classIndex;
     }
 
-
     public Integer removeStudent(Integer studentID, Integer classIndex) {
-
         Student deleteAbleStd = null;
         Integer isDeleted = 0;
         for (Student std : studentsList[classIndex]) {
@@ -86,7 +81,6 @@ public class StudentsController {
         return totalEarningAllClass.get(classIndex);
     }
 
-
     public void setTotalMarkXmCountAllStd(Integer numberOfSubjectTought, Double totalMarks) {
         totalExamCount += numberOfSubjectTought;
         totalMarksCount += totalMarks;
@@ -94,10 +88,9 @@ public class StudentsController {
 
     public double getAvgMarksAllStd() {
         if (totalExamCount == 0) return 0.0;
-        double avgMarksAllStd = (totalMarksCount / totalExamCount);
+        Double avgMarksAllStd = (totalMarksCount / totalExamCount);
         avgMarksAllStd = (double) Math.round(avgMarksAllStd * 100) / 100;
         return avgMarksAllStd;
     }
-
 
 }
