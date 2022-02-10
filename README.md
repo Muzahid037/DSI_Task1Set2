@@ -1,4 +1,4 @@
-<pre>
+
 # Problem Description
 
 You want to keep track of the students that you teach. You are cringingly self-conscious
