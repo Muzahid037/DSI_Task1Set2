@@ -10,11 +10,11 @@ give you options to:
 ## 1. Add a student
 **a.** There will be 3 classes. Class 8, 9, or 10. You will have to choose one.  
 **b.** It should have this information  
- <br  />   __i.__ Name  
- __ii.__ A list of booleans of what subjects you teach. Math, English, Or Bangla  
-__iii.__ Average of marks s/he get in the exam. (Will be 0 by default at first)  
-__iv.__ Total days taught (Will be 0 by default at first)  
-__v.__ Total earnings (Will be 0 by default at first)  
+&ensp;__i.__ Name  
+&ensp;__ii.__ A list of booleans of what subjects you teach. Math, English, Or Bangla  
+&ensp;__iii.__ Average of marks s/he get in the exam. (Will be 0 by default at first)  
+&ensp;__iv.__ Total days taught (Will be 0 by default at first)  
+&ensp;__v.__ Total earnings (Will be 0 by default at first)  
 
 ## 2. Edit a student  
 **a.** Adding days to the number of days taught. For every subject per day, you get BDT 1.  
