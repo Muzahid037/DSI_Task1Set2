@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Student {
+public class Student implements Serializable {
     private Integer studentId;
     private Integer className; ///8,9,10
     private String studentName;

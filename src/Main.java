@@ -1,13 +1,38 @@
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Main {
-    StudentsController StudentsController;
+    static StudentsController StudentsController;
+    private static String FileName = "StudentsDetails.txt";
     private static final Scanner scannerObj = new Scanner(System.in);
 
-    public Main() {
+    public Main() throws IOException, ClassNotFoundException {
         {
             StudentsController = StudentsController.getInstance();
+
+            File f = new File(FileName);
+            if(f.exists() && !f.isDirectory()) {
+                readFile();
+            }
+        }
+    }
+
+    private void readFile() throws IOException, ClassNotFoundException {
+        FileInputStream fin = new FileInputStream(FileName);
+        ObjectInputStream ois = new ObjectInputStream(fin);
+        StudentsController = (StudentsController) ois.readObject();
+        fin.close();
+    }
+
+    private void writeFile(){
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(FileName);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(StudentsController);
+            fout.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -69,7 +94,8 @@ public class Main {
         Boolean isExistStd = false;
 
         for (Student std : studentsByClass) {
-            if (std.getStudentId() == specificStudentId) {
+//            System.out.println("specificStudentId:"+specificStudentId+" std.getStudentId():"+std.getStudentId());
+            if (std.getStudentId().equals(specificStudentId)) {
                 isExistStd = true;
                 specificClassName = std.getClassName();
                 specificStudentName = std.getStudentName();
@@ -215,55 +241,55 @@ public class Main {
             if (studentsByClass == null) {
                 System.out.println("Enter valid class");
             } else if (studentsByClass.size() > 0) {
-                    Integer className = studentsByClass.get(0).getClassName();
-                    Integer classIndex = StudentsController.getClassIndex(className);
+                Integer className = studentsByClass.get(0).getClassName();
+                Integer classIndex = StudentsController.getClassIndex(className);
 
-                    System.out.println("Enter Student Id");
-                    Integer studentId = Integer.parseInt(scannerObj.nextLine());
+                System.out.println("Enter Student Id");
+                Integer studentId = Integer.parseInt(scannerObj.nextLine());
 
-                    Boolean isStdIdExist = new Boolean(false);
+                Boolean isStdIdExist = new Boolean(false);
 
-                    for (Student std : studentsByClass) {
-                        if (std.getStudentId() == studentId) {
+                for (Student std : studentsByClass) {
+                    if (std.getStudentId().equals(studentId)) {
 
-                            System.out.println("Enter How Many days you taught " + std.getStudentName() + "?");
-                            Integer dayTaught = Integer.parseInt(scannerObj.nextLine());
+                        System.out.println("Enter How Many days you taught " + std.getStudentName() + "?");
+                        Integer dayTaught = Integer.parseInt(scannerObj.nextLine());
 
-                            HashMap<String, Boolean> subjectTought = std.getSubjectToBeTought();
-                            Double totalMarks = 0.0, totalEarning = 0.0;
-                            Integer numberOfSubjectTought = 0;
+                        HashMap<String, Boolean> subjectTought = std.getSubjectToBeTought();
+                        Double totalMarks = 0.0, totalEarning = 0.0;
+                        Integer numberOfSubjectTought = 0;
 
-                            for (Map.Entry mapElement : subjectTought.entrySet()) {
+                        for (Map.Entry mapElement : subjectTought.entrySet()) {
 
-                                String subject = (String) mapElement.getKey();
-                                boolean isTaught = (Boolean) mapElement.getValue();
+                            String subject = (String) mapElement.getKey();
+                            boolean isTaught = (Boolean) mapElement.getValue();
 
-                                if (isTaught == true) {
-                                    numberOfSubjectTought++;
-                                    totalEarning += (dayTaught * 1.0);
+                            if (isTaught == true) {
+                                numberOfSubjectTought++;
+                                totalEarning += (dayTaught * 1.0);
 
-                                    System.out.println("Enter marks got in " + subject + " by " + std.getStudentName() + "?");
-                                    Double marks = Double.parseDouble(scannerObj.nextLine());
-                                    totalMarks += marks;
-                                }
+                                System.out.println("Enter marks got in " + subject + " by " + std.getStudentName() + "?");
+                                Double marks = Double.parseDouble(scannerObj.nextLine());
+                                totalMarks += marks;
                             }
-                            std.setTotalEarning(totalEarning);
-                            std.setAvgMarks(totalMarks / numberOfSubjectTought);
-                            std.setTotalDayTought(dayTaught);
-
-                            StudentsController.setTotalDayTaughtByClass(classIndex, dayTaught);
-                            StudentsController.setTotalEarningByClass(classIndex, totalEarning);
-                            StudentsController.setTotalMarkXmCountAllStd(numberOfSubjectTought, totalMarks);
-
-                            isStdIdExist = true;
-                            break;
                         }
+                        std.setTotalEarning(totalEarning);
+                        std.setAvgMarks(totalMarks / numberOfSubjectTought);
+                        std.setTotalDayTought(dayTaught);
+
+                        StudentsController.setTotalDayTaughtByClass(classIndex, dayTaught);
+                        StudentsController.setTotalEarningByClass(classIndex, totalEarning);
+                        StudentsController.setTotalMarkXmCountAllStd(numberOfSubjectTought, totalMarks);
+
+                        isStdIdExist = true;
+                        break;
                     }
-                    if (isStdIdExist) {
-                        System.out.println("Student with ID:" + studentId + " was edited successfully from Class:" + className);
-                    } else {
-                        System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
-                    }
+                }
+                if (isStdIdExist) {
+                    System.out.println("Student with ID:" + studentId + " was edited successfully from Class:" + className);
+                } else {
+                    System.out.println("No student found for Edit with Student ID: " + studentId + "in Class:" + className);
+                }
             } else {
                 System.out.println("There is no student in this Class.");
             }
@@ -343,7 +369,8 @@ public class Main {
         System.out.println("+----------------------------------------------+");
     }
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         Main mainInstance = new Main();
         showMenuboard();
@@ -383,5 +410,8 @@ public class Main {
                 System.out.println("Enter valid Input");
             }
         }
+
+        mainInstance.writeFile();
+
     }
 }

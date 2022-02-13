@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class StudentsController {
+public class StudentsController implements Serializable {
     private static StudentsController StudentsController = null;
     private ArrayList<Student>[] studentsList;
     private ArrayList<Integer> totalDayTaughtAllClass;
@@ -9,6 +10,8 @@ public class StudentsController {
     private Double totalMarksCount;
 
     private StudentsController() {
+
+
         studentsList = new ArrayList[3];
         totalDayTaughtAllClass = new ArrayList<Integer>(3);
         totalEarningAllClass = new ArrayList<Double>(3);
@@ -19,6 +22,9 @@ public class StudentsController {
         }
         totalExamCount = 0;
         totalMarksCount = 0.0;
+
+
+
     }
 
     public static StudentsController getInstance() {
@@ -92,5 +98,4 @@ public class StudentsController {
         avgMarksAllStd = (double) Math.round(avgMarksAllStd * 100) / 100;
         return avgMarksAllStd;
     }
-
 }
