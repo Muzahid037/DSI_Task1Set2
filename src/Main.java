@@ -55,7 +55,7 @@ public class Main {
         Double earningFromClass8 = StudentsController.getTotalEarningByClass(0);
         Double earningFromClass9 = StudentsController.getTotalEarningByClass(1);
         Double earningFromClass10 = StudentsController.getTotalEarningByClass(2);
-        System.out.println("Earning from Class-8: " + earningFromClass8);
+        System.out.println("Earning from Class-8 g: " + earningFromClass8);
         System.out.println("Earning from Class-9: " + earningFromClass9);
         System.out.println("Earning from Class-10: " + earningFromClass10);
     }
