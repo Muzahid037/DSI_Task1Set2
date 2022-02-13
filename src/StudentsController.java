@@ -10,8 +10,8 @@ public class StudentsController {
 
     private StudentsController() {
         studentsList = new ArrayList[3];
-        totalDayTaughtAllClass = new ArrayList<>(3);
-        totalEarningAllClass = new ArrayList<>(3);
+        totalDayTaughtAllClass = new ArrayList<Integer>(3);
+        totalEarningAllClass = new ArrayList<Double>(3);
         for (int i = 0; i < 3; i++) {
             studentsList[i] = new ArrayList<Student>();
             totalDayTaughtAllClass.add(0);

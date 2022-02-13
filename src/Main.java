@@ -27,9 +27,9 @@ public class Main {
     }
 
     private void showEarningByClass() {
-        Integer earningFromClass8 = StudentsController.getTotalDayTaughtByClass(0);
-        Integer earningFromClass9 = StudentsController.getTotalDayTaughtByClass(1);
-        Integer earningFromClass10 = StudentsController.getTotalDayTaughtByClass(2);
+        Double earningFromClass8 = StudentsController.getTotalEarningByClass(0);
+        Double earningFromClass9 = StudentsController.getTotalEarningByClass(1);
+        Double earningFromClass10 = StudentsController.getTotalEarningByClass(2);
         System.out.println("Earning from Class-8: " + earningFromClass8);
         System.out.println("Earning from Class-9: " + earningFromClass9);
         System.out.println("Earning from Class-10: " + earningFromClass10);
@@ -50,10 +50,12 @@ public class Main {
     }
 
     public void showOverAllInfo() {
+        System.out.println("+------------Overall information------------+");
         Integer dayTaughtAllClass = showDayTaughtByClass();
         showDayTaughtAllClass(dayTaughtAllClass);
         showEarningByClass();
         showAvgMarksOfAllStd();
+        System.out.println("+-------------------------------------------+");
     }
 
     private Integer showStudentListBySpecificID(ArrayList<Student> studentsByClass, Integer specificStudentId) {
